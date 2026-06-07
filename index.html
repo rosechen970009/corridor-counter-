@@ -1,169 +1,216 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="Corridor Counter" />
-<title>Corridor Test Counter - Contra %</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Corridor Test Counter</title>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif;background:#eefdff;color:#173b3f}
-body{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
-.wrap{max-width:760px;margin:0 auto}
-h1{text-align:center;color:#00796b;font-size:26px;margin:8px 0 12px}
-.panel{background:#fff;border-radius:22px;padding:14px;box-shadow:0 8px 22px rgba(0,0,0,.08)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-label{font-weight:800;font-size:13px;margin:6px 0 4px;display:block}
-input{width:100%;padding:13px;border:1px solid #cbdede;border-radius:14px;font-size:18px;background:#fff}
-.status{margin:12px 0;padding:12px;border-radius:16px;background:#e2f6f4;text-align:center;font-size:20px;font-weight:900}
-.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.card{background:#f8fbfb;border:1px solid #dceeee;border-radius:18px;text-align:center;padding:10px 4px}
-.card .label{font-size:14px;font-weight:900;color:#355}
-.card .num{font-size:42px;font-weight:1000;line-height:1.05}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",Arial,sans-serif;
+  background:#eefdff;
+  margin:0;
+  padding:14px;
+  color:#173b3f;
+}
+.box{
+  max-width:680px;
+  margin:auto;
+  background:white;
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+h1{text-align:center;color:#00796b;font-size:26px;margin:8px 0 14px;}
+.row{display:flex;gap:10px;margin-bottom:10px;}
+.field{flex:1;}
+label{font-weight:800;font-size:14px;display:block;margin-bottom:4px;}
+input{width:100%;font-size:20px;padding:12px;border-radius:12px;border:1px solid #ccc;box-sizing:border-box;}
+.status{text-align:center;font-weight:900;font-size:24px;background:#e2f6f4;border-radius:14px;padding:12px;margin:12px 0;}
+.counts{display:flex;gap:8px;margin:10px 0;}
+.card{flex:1;text-align:center;background:#f8fbfb;border-radius:16px;padding:10px 4px;}
+.name{font-weight:900;font-size:15px;}
+.num{font-weight:900;font-size:44px;}
 .contra{color:#1565c0}.ipsi{color:#d32f2f}.total{color:#00796b}
-.percentBox{margin:10px 0;padding:14px;border-radius:18px;background:#f3fffd;border:1px solid #cfe9e5;text-align:center}
-.percentBox .small{font-weight:900;color:#355}
-.percentBox .big{font-size:38px;font-weight:1000;color:#00796b}
-.mainBtns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-button{border:0;border-radius:22px;font-weight:1000;color:white;touch-action:manipulation;user-select:none;-webkit-user-select:none;cursor:pointer}
-.big{min-height:150px;font-size:32px}
-#contraBtn{background:#1976d2}
-#ipsiBtn{background:#d32f2f}
-.smallBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.smallBtns button{min-height:54px;font-size:18px}
-#undoBtn{background:#fb8c00}#saveBtn{background:#00897b}#exportBtn{background:#455a64}#resetBtn{background:#666}
-button:disabled{opacity:.45;filter:grayscale(.5)}
-.note{font-size:14px;line-height:1.5;color:#5a3d66;margin-top:10px}
-.tableWrap{overflow:auto;margin-top:10px;border-radius:14px}
-table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
-th{background:#d8f3ee;color:#234;padding:8px;white-space:nowrap}
-td{border-bottom:1px solid #e7eeee;padding:8px;text-align:center;white-space:nowrap}
-.done{background:#dff7e8;color:#087b31}
-.warn{background:#fff3cd;color:#8a5a00}
-@media(max-width:520px){.big{min-height:145px;font-size:28px}.grid{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr 1fr}h1{font-size:23px}}
+.percent{text-align:center;background:#f3fffd;border-radius:16px;padding:14px;margin:10px 0;}
+.percent .big{font-size:42px;font-weight:900;color:#00796b;}
+.buttons{display:flex;gap:12px;margin-top:12px;}
+.bigbtn{
+  flex:1;
+  border:0;
+  border-radius:22px;
+  color:white;
+  font-weight:900;
+  font-size:30px;
+  min-height:150px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#contraBtn{background:#1976d2;}
+#ipsiBtn{background:#d32f2f;}
+.smallbuttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.smallbuttons button{border:0;border-radius:16px;color:white;font-weight:900;font-size:18px;min-height:55px;}
+#undoBtn{background:#fb8c00;}#saveBtn{background:#00897b;}#exportBtn{background:#455a64;}#resetBtn{background:#666;}
+.note{font-size:14px;color:#555;line-height:1.5;margin-top:10px;}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;background:white;}
+th,td{padding:8px;border-bottom:1px solid #ddd;text-align:center;}
+th{background:#d8f3ee;}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="box">
 <h1>Corridor Test 計數器</h1>
-<div class="panel">
-  <div class="grid">
-    <div><label>小鼠編號</label><input id="mouseId" placeholder="M01"></div>
-    <div><label>總上限</label><input id="limit" type="number" value="20" min="1"></div>
+
+<div class="row">
+  <div class="field">
+    <label>小鼠編號</label>
+    <input id="mouseId" placeholder="M01">
   </div>
-  <label>Trial / 備註</label><input id="trial" placeholder="Day 14 / pre-test">
-
-  <div id="status" class="status">進行中：0 / 20</div>
-
-  <div class="cards">
-    <div class="card"><div class="label">Contra<br><small>左側</small></div><div id="contraCount" class="num contra">0</div></div>
-    <div class="card"><div class="label">Ipsi<br><small>右側</small></div><div id="ipsiCount" class="num ipsi">0</div></div>
-    <div class="card"><div class="label">Total</div><div id="totalCount" class="num total">0</div></div>
-  </div>
-
-  <div class="percentBox">
-    <div class="small">Contralateral % = Contra / (Ipsi + Contra) × 100</div>
-    <div id="contraPercent" class="big">0.0%</div>
-  </div>
-
-  <div class="mainBtns">
-    <button id="contraBtn" class="big">CONTRA<br><span style="font-size:22px">左側</span></button>
-    <button id="ipsiBtn" class="big">IPSI<br><span style="font-size:22px">右側</span></button>
-  </div>
-
-  <div class="smallBtns">
-    <button id="undoBtn">復原</button>
-    <button id="saveBtn">儲存這筆</button>
-    <button id="exportBtn">匯出 CSV</button>
-    <button id="resetBtn">全部重設</button>
-  </div>
-
-  <div class="note">
-    右側 = Ipsi；左側 = Contra。達到總上限會自動停止。<br>
-    電腦快捷鍵：A = Contra 左側，L = Ipsi 右側，Z = 復原。
-  </div>
-
-  <div class="tableWrap">
-    <table>
-      <thead><tr><th>時間</th><th>小鼠</th><th>Trial</th><th>Contra</th><th>Ipsi</th><th>Total</th><th>Contra %</th></tr></thead>
-      <tbody id="records"></tbody>
-    </table>
+  <div class="field">
+    <label>總上限</label>
+    <input id="limit" type="number" value="20" min="1">
   </div>
 </div>
+
+<label>Trial / 備註</label>
+<input id="trial" placeholder="Day 14 / pre-test">
+
+<div id="status" class="status">進行中：0 / 20</div>
+
+<div class="counts">
+  <div class="card"><div class="name">Contra<br><small>左側</small></div><div id="contraCount" class="num contra">0</div></div>
+  <div class="card"><div class="name">Ipsi<br><small>右側</small></div><div id="ipsiCount" class="num ipsi">0</div></div>
+  <div class="card"><div class="name">Total</div><div id="totalCount" class="num total">0</div></div>
+</div>
+
+<div class="percent">
+  <div><b>Contralateral % = Contra / Total × 100</b></div>
+  <div id="contraPercent" class="big">0.0%</div>
+</div>
+
+<div class="buttons">
+  <button type="button" id="contraBtn" class="bigbtn" onclick="addCount('contra')">CONTRA<br><span style="font-size:20px">左側</span></button>
+  <button type="button" id="ipsiBtn" class="bigbtn" onclick="addCount('ipsi')">IPSI<br><span style="font-size:20px">右側</span></button>
+</div>
+
+<div class="smallbuttons">
+  <button type="button" id="undoBtn" onclick="undoCount()">復原</button>
+  <button type="button" id="saveBtn" onclick="saveData()">儲存這筆</button>
+  <button type="button" id="exportBtn" onclick="exportCSV()">匯出 CSV</button>
+  <button type="button" id="resetBtn" onclick="resetCurrent()">重設目前</button>
+</div>
+
+<div class="note">右側 = Ipsi；左側 = Contra。達到上限後只停止計數，沒有聲音、沒有震動、沒有 disabled。</div>
+
+<table>
+<thead><tr><th>時間</th><th>小鼠</th><th>Trial</th><th>Contra</th><th>Ipsi</th><th>Total</th><th>Contra %</th></tr></thead>
+<tbody id="records"></tbody>
+</table>
 </div>
 
 <script>
-let contra=0, ipsi=0, history=[], rows=[];
-const $=id=>document.getElementById(id);
-function limit(){return Math.max(1, parseInt($('limit').value||20));}
-function total(){return contra+ipsi;}
-function pct(){return total()? (contra/total()*100):0;}
-function done(){return total()>=limit();}
-function update(){
-  $('contraCount').textContent=contra;
-  $('ipsiCount').textContent=ipsi;
-  $('totalCount').textContent=total();
-  $('contraPercent').textContent=pct().toFixed(1)+'%';
-  $('status').textContent = done()? '✅ Completed：'+total()+' / '+limit() : '進行中：'+total()+' / '+limit();
-  $('status').className = 'status ' + (done()?'done':'');
-  $('contraBtn').disabled=done();
-  $('ipsiBtn').disabled=done();
+var contra = 0;
+var ipsi = 0;
+var historyList = [];
+var savedRows = [];
+
+function el(id){ return document.getElementById(id); }
+function getLimit(){
+  var v = parseInt(el('limit').value, 10);
+  if(isNaN(v) || v < 1) v = 20;
+  return v;
 }
+function total(){ return contra + ipsi; }
+function percent(){ return total() === 0 ? 0 : contra / total() * 100; }
+function isDone(){ return total() >= getLimit(); }
+
+function updateScreen(){
+  el('contraCount').innerText = contra;
+  el('ipsiCount').innerText = ipsi;
+  el('totalCount').innerText = total();
+  el('contraPercent').innerText = percent().toFixed(1) + '%';
+  if(isDone()){
+    el('status').innerText = '✅ Completed：' + total() + ' / ' + getLimit();
+    el('status').style.background = '#dff7e8';
+    el('status').style.color = '#087b31';
+  }else{
+    el('status').innerText = '進行中：' + total() + ' / ' + getLimit();
+    el('status').style.background = '#e2f6f4';
+    el('status').style.color = '#173b3f';
+  }
 }
-function add(side){
- if(done()) return;
- history.push(side);
- if(side==='contra') contra++; else ipsi++;
- update();
+
+function addCount(side){
+  if(isDone()) return false;
+  historyList.push(side);
+  if(side === 'contra') contra += 1;
+  if(side === 'ipsi') ipsi += 1;
+  updateScreen();
+  return false;
 }
-function undo(){
- const last=history.pop();
- if(!last) return;
- if(last==='contra') contra--; else ipsi--;
- update();
+
+function undoCount(){
+  if(historyList.length === 0) return false;
+  var last = historyList.pop();
+  if(last === 'contra' && contra > 0) contra -= 1;
+  if(last === 'ipsi' && ipsi > 0) ipsi -= 1;
+  updateScreen();
+  return false;
 }
-function resetCounts(){
- if(confirm('確定要全部重設目前這隻小鼠的計數？')){
-  contra=0; ipsi=0; history=[]; update();
- }
+
+function resetCurrent(){
+  contra = 0;
+  ipsi = 0;
+  historyList = [];
+  updateScreen();
+  return false;
 }
-function saveRow(){
- const row={
-  time:new Date().toLocaleString(),
-  mouse:$('mouseId').value||'',
-  trial:$('trial').value||'',
-  contra, ipsi, total:total(), percent:pct().toFixed(1)
- };
- rows.push(row);
- renderRows();
- contra=0; ipsi=0; history=[]; update();
+
+function saveData(){
+  var row = {
+    time: new Date().toLocaleString(),
+    mouse: el('mouseId').value,
+    trial: el('trial').value,
+    contra: contra,
+    ipsi: ipsi,
+    total: total(),
+    pct: percent().toFixed(1)
+  };
+  savedRows.push(row);
+  renderRows();
+  resetCurrent();
+  return false;
 }
+
 function renderRows(){
- $('records').innerHTML = rows.map(r=>`<tr><td>${r.time}</td><td>${r.mouse}</td><td>${r.trial}</td><td>${r.contra}</td><td>${r.ipsi}</td><td>${r.total}</td><td>${r.percent}</td></tr>`).join('');
+  var html = '';
+  for(var i=0;i<savedRows.length;i++){
+    var r = savedRows[i];
+    html += '<tr><td>'+r.time+'</td><td>'+r.mouse+'</td><td>'+r.trial+'</td><td>'+r.contra+'</td><td>'+r.ipsi+'</td><td>'+r.total+'</td><td>'+r.pct+'</td></tr>';
+  }
+  el('records').innerHTML = html;
 }
+
 function exportCSV(){
- const header=['Time','Mouse','Trial','Contralateral','Ipsilateral','Total','Contralateral_percent'];
- const data=rows.map(r=>[r.time,r.mouse,r.trial,r.contra,r.ipsi,r.total,r.percent]);
- const csv=[header,...data].map(a=>a.map(x=>`"${String(x).replaceAll('"','""')}"`).join(',')).join('\n');
- const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
- const url=URL.createObjectURL(blob);
- const a=document.createElement('a'); a.href=url; a.download='corridor_test_results.csv'; a.click();
- URL.revokeObjectURL(url);
+  var lines = [];
+  lines.push('Time,Mouse,Trial,Contralateral,Ipsilateral,Total,Contralateral_percent');
+  for(var i=0;i<savedRows.length;i++){
+    var r = savedRows[i];
+    lines.push('"'+r.time+'","'+r.mouse+'","'+r.trial+'",'+r.contra+','+r.ipsi+','+r.total+','+r.pct);
+  }
+  var blob = new Blob(['\ufeff' + lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'corridor_test_results.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  return false;
 }
-$('contraBtn').onclick=()=>add('contra');
-$('ipsiBtn').onclick=()=>add('ipsi');
-$('undoBtn').onclick=undo;
-$('resetBtn').onclick=resetCounts;
-$('saveBtn').onclick=saveRow;
-$('exportBtn').onclick=exportCSV;
-$('limit').onchange=update;
-document.addEventListener('keydown',e=>{
- if(e.key.toLowerCase()==='a') add('contra');
- if(e.key.toLowerCase()==='l') add('ipsi');
- if(e.key.toLowerCase()==='z') undo();
-});
-update();
+
+el('limit').addEventListener('change', updateScreen);
+updateScreen();
 </script>
 </body>
 </html>
