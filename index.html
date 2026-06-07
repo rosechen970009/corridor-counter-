@@ -1,133 +1,178 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Corridor Counter">
-<title>Corridor Test Counter - Right Lesion</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Corridor Counter" />
+<title>Corridor Test Counter - Contra %</title>
 <style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin:0; padding:0; min-height:100%; font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif; background:#eefafa; color:#102; overscroll-behavior:none; }
-  body { padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
-  .wrap { max-width: 760px; margin:0 auto; }
-  h1 { margin: 6px 0 10px; font-size: 24px; text-align:center; color:#006d70; }
-  .panel { background:white; border-radius:22px; padding:14px; box-shadow:0 8px 22px rgba(0,0,0,.08); }
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  label { display:block; font-weight:800; font-size:13px; margin-bottom:4px; color:#244; }
-  input { width:100%; padding:13px; border:1px solid #cbdede; border-radius:14px; font-size:18px; background:#fff; }
-  .status { margin:12px 0; padding:12px; border-radius:16px; background:#e2f6f4; text-align:center; font-weight:900; font-size:18px; }
-  .counts { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-  .card { background:#f7fbfb; border:1px solid #deeeee; border-radius:18px; text-align:center; padding:10px 4px; }
-  .label { font-size:14px; font-weight:800; color:#355; }
-  .num { font-size:42px; font-weight:1000; line-height:1.05; }
-  .leftNum { color:#1565c0; } .rightNum { color:#c62828; } .totalNum { color:#00796b; }
-  .mainBtns { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
-  button { border:0; border-radius:22px; font-weight:1000; color:white; touch-action:manipulation; user-select:none; -webkit-user-select:none; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,.15); }
-  .big { min-height:150px; font-size:38px; }
-  #leftBtn { background:#1976d2; } #rightBtn { background:#d32f2f; }
-  button:active { transform:scale(.985); filter:brightness(.95); }
-  button:disabled { background:#aaa !important; box-shadow:none; }
-  .tools { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:10px; }
-  .tools button { padding:15px 8px; font-size:17px; border-radius:16px; background:#008b8b; }
-  #undoBtn { background:#f57c00; } #resetBtn { background:#666; } #exportBtn { background:#455a64; }
-  .summary { margin-top:12px; padding:12px; background:#fbfefe; border:1px solid #e2eeee; border-radius:16px; font-size:15px; line-height:1.5; }
-  table { width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; background:white; }
-  th,td { border-bottom:1px solid #e8eeee; padding:7px 4px; text-align:center; }
-  th { background:#e2f6f4; }
-  .hint { font-size:13px; color:#546; line-height:1.5; margin-top:10px; }
-  @media (max-width:430px){ .big{min-height:165px;font-size:36px;} .num{font-size:39px;} h1{font-size:22px;} .panel{padding:12px;} }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif;background:#eefdff;color:#173b3f}
+body{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+.wrap{max-width:760px;margin:0 auto}
+h1{text-align:center;color:#00796b;font-size:26px;margin:8px 0 12px}
+.panel{background:#fff;border-radius:22px;padding:14px;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-weight:800;font-size:13px;margin:6px 0 4px;display:block}
+input{width:100%;padding:13px;border:1px solid #cbdede;border-radius:14px;font-size:18px;background:#fff}
+.status{margin:12px 0;padding:12px;border-radius:16px;background:#e2f6f4;text-align:center;font-size:20px;font-weight:900}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.card{background:#f8fbfb;border:1px solid #dceeee;border-radius:18px;text-align:center;padding:10px 4px}
+.card .label{font-size:14px;font-weight:900;color:#355}
+.card .num{font-size:42px;font-weight:1000;line-height:1.05}
+.contra{color:#1565c0}.ipsi{color:#d32f2f}.total{color:#00796b}
+.percentBox{margin:10px 0;padding:14px;border-radius:18px;background:#f3fffd;border:1px solid #cfe9e5;text-align:center}
+.percentBox .small{font-weight:900;color:#355}
+.percentBox .big{font-size:38px;font-weight:1000;color:#00796b}
+.mainBtns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+button{border:0;border-radius:22px;font-weight:1000;color:white;touch-action:manipulation;user-select:none;-webkit-user-select:none;cursor:pointer}
+.big{min-height:150px;font-size:32px}
+#contraBtn{background:#1976d2}
+#ipsiBtn{background:#d32f2f}
+.smallBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.smallBtns button{min-height:54px;font-size:18px}
+#undoBtn{background:#fb8c00}#saveBtn{background:#00897b}#exportBtn{background:#455a64}#resetBtn{background:#666}
+button:disabled{opacity:.45;filter:grayscale(.5)}
+.note{font-size:14px;line-height:1.5;color:#5a3d66;margin-top:10px}
+.tableWrap{overflow:auto;margin-top:10px;border-radius:14px}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
+th{background:#d8f3ee;color:#234;padding:8px;white-space:nowrap}
+td{border-bottom:1px solid #e7eeee;padding:8px;text-align:center;white-space:nowrap}
+.done{background:#dff7e8;color:#087b31}
+.warn{background:#fff3cd;color:#8a5a00}
+@media(max-width:520px){.big{min-height:145px;font-size:28px}.grid{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr 1fr}h1{font-size:23px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Corridor Test 計數器</h1>
-  <div class="panel">
-    <div class="grid">
-      <div><label>小鼠編號</label><input id="mouseId" autocomplete="off" placeholder="M01"></div>
-      <div><label>總上限</label><input id="limit" type="number" inputmode="numeric" min="1" value="20"></div>
-      <div style="grid-column:1/3"><label>Trial / 備註</label><input id="trial" autocomplete="off" placeholder="Day 14 / pre-test"></div>
-    </div>
-    <div id="status" class="status">右側病灶：右=Ipsi，左=Contra｜0 / 20</div>
-    <div class="counts">
-      <div class="card"><div class="label">Contra 左</div><div id="leftCount" class="num leftNum">0</div></div>
-      <div class="card"><div class="label">Ipsi 右</div><div id="rightCount" class="num rightNum">0</div></div>
-      <div class="card"><div class="label">總</div><div id="totalCount" class="num totalNum">0</div></div>
-    </div>
-    <div class="mainBtns">
-      <button id="leftBtn" class="big" type="button">← Contra<br><span style="font-size:22px">左側 retrieval</span></button>
-      <button id="rightBtn" class="big" type="button">Ipsi →<br><span style="font-size:22px">右側 retrieval</span></button>
-    </div>
-    <div class="tools">
-      <button id="undoBtn" type="button">復原</button>
-      <button id="saveBtn" type="button">儲存這筆</button>
-      <button id="exportBtn" type="button">匯出 CSV</button>
-      <button id="resetBtn" type="button">全部重設</button>
-    </div>
-    <div class="summary" id="summary">Contralateral % = Contra / (Ipsi + Contra) × 100</div>
-    <table><thead><tr><th>時間</th><th>小鼠</th><th>Contra</th><th>Ipsi</th><th>總</th><th>Contra %</th></tr></thead><tbody id="tbody"></tbody></table>
-    <div class="hint">iPhone 使用方式：請用 Safari 開啟，不要只在 ChatGPT 預覽頁操作。可按分享 → 加入主畫面，之後像 App 一樣打開。</div>
+<h1>Corridor Test 計數器</h1>
+<div class="panel">
+  <div class="grid">
+    <div><label>小鼠編號</label><input id="mouseId" placeholder="M01"></div>
+    <div><label>總上限</label><input id="limit" type="number" value="20" min="1"></div>
+  </div>
+  <label>Trial / 備註</label><input id="trial" placeholder="Day 14 / pre-test">
+
+  <div id="status" class="status">進行中：0 / 20</div>
+
+  <div class="cards">
+    <div class="card"><div class="label">Contra<br><small>左側</small></div><div id="contraCount" class="num contra">0</div></div>
+    <div class="card"><div class="label">Ipsi<br><small>右側</small></div><div id="ipsiCount" class="num ipsi">0</div></div>
+    <div class="card"><div class="label">Total</div><div id="totalCount" class="num total">0</div></div>
+  </div>
+
+  <div class="percentBox">
+    <div class="small">Contralateral % = Contra / (Ipsi + Contra) × 100</div>
+    <div id="contraPercent" class="big">0.0%</div>
+  </div>
+
+  <div class="mainBtns">
+    <button id="contraBtn" class="big">CONTRA<br><span style="font-size:22px">左側</span></button>
+    <button id="ipsiBtn" class="big">IPSI<br><span style="font-size:22px">右側</span></button>
+  </div>
+
+  <div class="smallBtns">
+    <button id="undoBtn">復原</button>
+    <button id="saveBtn">儲存這筆</button>
+    <button id="exportBtn">匯出 CSV</button>
+    <button id="resetBtn">全部重設</button>
+  </div>
+
+  <div class="note">
+    右側 = Ipsi；左側 = Contra。達到總上限會自動停止。<br>
+    電腦快捷鍵：A = Contra 左側，L = Ipsi 右側，Z = 復原。
+  </div>
+
+  <div class="tableWrap">
+    <table>
+      <thead><tr><th>時間</th><th>小鼠</th><th>Trial</th><th>Contra</th><th>Ipsi</th><th>Total</th><th>Contra %</th></tr></thead>
+      <tbody id="records"></tbody>
+    </table>
   </div>
 </div>
+</div>
+
 <script>
-(function(){
-  'use strict';
-  let left=0,right=0,history=[],stopped=false;
-  let rows=[];
-  const $ = id => document.getElementById(id);
-  const els = ['leftBtn','rightBtn','undoBtn','saveBtn','exportBtn','resetBtn','limit','mouseId','trial','leftCount','rightCount','totalCount','status','summary','tbody'].reduce((o,id)=>(o[id]=$(id),o),{});
-  try { rows = JSON.parse(localStorage.getItem('corridorRows') || '[]'); } catch(e) { rows=[]; }
-  function limit(){ const n=parseInt(els.limit.value,10); return Number.isFinite(n)&&n>0?n:20; }
-  function total(){ return left+right; }
-  function contraPct(){ return total()?((left/total())*100).toFixed(1):''; }
-  function vibrate(){ if(navigator.vibrate) navigator.vibrate(20); }
-  function draw(){
-    const lim=limit(), t=total();
-    els.leftCount.textContent=left; els.rightCount.textContent=right; els.totalCount.textContent=t;
-    els.status.textContent = stopped ? `✅ 已達上限 ${lim} 次，已停止` : `進行中：${t} / ${lim}`;
-    els.summary.textContent = `右側病灶：Contra = 左側 retrieval；Ipsi = 右側 retrieval｜Contralateral % = ${contraPct() || '尚無'}%`;
-    els.leftBtn.disabled=stopped; els.rightBtn.disabled=stopped;
-    renderRows();
-  }
-  function add(side){
-    if(stopped) return;
-    if(total() >= limit()){ stopped=true; draw(); return; }
-    if(side==='L') left++; else right++;
-    history.push(side); vibrate();
-    if(total() >= limit()) stopped=true;
-    draw();
-  }
-  function undo(){
-    const last=history.pop(); if(!last) return;
-    if(last==='L' && left>0) left--; if(last==='R' && right>0) right--;
-    stopped=false; vibrate(); draw();
-  }
-  function save(){
-    rows.push({time:new Date().toLocaleString('zh-TW'), mouse:els.mouseId.value.trim(), trial:els.trial.value.trim(), contra:left, ipsi:right, total:total(), contra_pct:contraPct()});
-    localStorage.setItem('corridorRows', JSON.stringify(rows));
-    left=0; right=0; history=[]; stopped=false; draw();
-  }
-  function reset(){
-    if(!confirm('確定全部重設？包含已儲存但未匯出的資料。')) return;
-    left=0; right=0; history=[]; stopped=false; rows=[]; localStorage.removeItem('corridorRows'); draw();
-  }
-  function renderRows(){
-    els.tbody.innerHTML = rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.mouse)}</td><td>${r.contra ?? r.left ?? 0}</td><td>${r.ipsi ?? r.right ?? 0}</td><td>${r.total}</td><td>${r.contra_pct ?? r.pi ?? ''}</td></tr>`).join('');
-  }
-  function esc(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function exportCSV(){
-    if(!rows.length){ alert('目前沒有已儲存資料。'); return; }
-    const header=['time','mouse_id','trial','contralateral_left','ipsilateral_right','total','contralateral_percent'];
-    const lines=[header.join(',')].concat(rows.map(r=>[r.time,r.mouse,r.trial,(r.contra ?? r.left ?? 0),(r.ipsi ?? r.right ?? 0),r.total,(r.contra_pct ?? r.pi ?? '')].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')));
-    const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
-    const url=URL.createObjectURL(blob); const a=document.createElement('a');
-    a.href=url; a.download='corridor_counter_results.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
-  }
-  function bind(btn, fn){ btn.addEventListener('click', fn, {passive:true}); btn.addEventListener('touchend', function(e){ e.preventDefault(); fn(); }, {passive:false}); }
-  bind(els.leftBtn, ()=>add('L')); bind(els.rightBtn, ()=>add('R')); bind(els.undoBtn, undo); bind(els.saveBtn, save); bind(els.exportBtn, exportCSV); bind(els.resetBtn, reset);
-  els.limit.addEventListener('change', draw);
-  draw();
-})();
+let contra=0, ipsi=0, history=[], rows=[];
+const $=id=>document.getElementById(id);
+function limit(){return Math.max(1, parseInt($('limit').value||20));}
+function total(){return contra+ipsi;}
+function pct(){return total()? (contra/total()*100):0;}
+function done(){return total()>=limit();}
+function update(){
+  $('contraCount').textContent=contra;
+  $('ipsiCount').textContent=ipsi;
+  $('totalCount').textContent=total();
+  $('contraPercent').textContent=pct().toFixed(1)+'%';
+  $('status').textContent = done()? '✅ Completed：'+total()+' / '+limit() : '進行中：'+total()+' / '+limit();
+  $('status').className = 'status ' + (done()?'done':'');
+  $('contraBtn').disabled=done();
+  $('ipsiBtn').disabled=done();
+}
+function beep(){
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const osc=ctx.createOscillator(); const gain=ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.frequency.value=880; gain.gain.value=.08; osc.start();
+  setTimeout(()=>{osc.stop();ctx.close();},160);
+ }catch(e){}
+}
+function add(side){
+ if(done()) return;
+ history.push(side);
+ if(side==='contra') contra++; else ipsi++;
+ update();
+ if(done()) beep();
+}
+function undo(){
+ const last=history.pop();
+ if(!last) return;
+ if(last==='contra') contra--; else ipsi--;
+ update();
+}
+function resetCounts(){
+ if(confirm('確定要全部重設目前這隻小鼠的計數？')){
+  contra=0; ipsi=0; history=[]; update();
+ }
+}
+function saveRow(){
+ const row={
+  time:new Date().toLocaleString(),
+  mouse:$('mouseId').value||'',
+  trial:$('trial').value||'',
+  contra, ipsi, total:total(), percent:pct().toFixed(1)
+ };
+ rows.push(row);
+ renderRows();
+ contra=0; ipsi=0; history=[]; update();
+}
+function renderRows(){
+ $('records').innerHTML = rows.map(r=>`<tr><td>${r.time}</td><td>${r.mouse}</td><td>${r.trial}</td><td>${r.contra}</td><td>${r.ipsi}</td><td>${r.total}</td><td>${r.percent}</td></tr>`).join('');
+}
+function exportCSV(){
+ const header=['Time','Mouse','Trial','Contralateral','Ipsilateral','Total','Contralateral_percent'];
+ const data=rows.map(r=>[r.time,r.mouse,r.trial,r.contra,r.ipsi,r.total,r.percent]);
+ const csv=[header,...data].map(a=>a.map(x=>`"${String(x).replaceAll('"','""')}"`).join(',')).join('\n');
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a'); a.href=url; a.download='corridor_test_results.csv'; a.click();
+ URL.revokeObjectURL(url);
+}
+$('contraBtn').onclick=()=>add('contra');
+$('ipsiBtn').onclick=()=>add('ipsi');
+$('undoBtn').onclick=undo;
+$('resetBtn').onclick=resetCounts;
+$('saveBtn').onclick=saveRow;
+$('exportBtn').onclick=exportCSV;
+$('limit').onchange=update;
+document.addEventListener('keydown',e=>{
+ if(e.key.toLowerCase()==='a') add('contra');
+ if(e.key.toLowerCase()==='l') add('ipsi');
+ if(e.key.toLowerCase()==='z') undo();
+});
+update();
 </script>
 </body>
 </html>
