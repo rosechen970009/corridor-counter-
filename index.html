@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Corridor Counter">
-<title>Corridor Counter iPhone</title>
+<title>Corridor Test Counter - Right Lesion</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin:0; padding:0; min-height:100%; font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif; background:#eefafa; color:#102; overscroll-behavior:none; }
@@ -48,15 +48,15 @@
       <div><label>總上限</label><input id="limit" type="number" inputmode="numeric" min="1" value="20"></div>
       <div style="grid-column:1/3"><label>Trial / 備註</label><input id="trial" autocomplete="off" placeholder="Day 14 / pre-test"></div>
     </div>
-    <div id="status" class="status">按左或右開始：0 / 20</div>
+    <div id="status" class="status">右側病灶：右=Ipsi，左=Contra｜0 / 20</div>
     <div class="counts">
-      <div class="card"><div class="label">左</div><div id="leftCount" class="num leftNum">0</div></div>
-      <div class="card"><div class="label">右</div><div id="rightCount" class="num rightNum">0</div></div>
+      <div class="card"><div class="label">Contra 左</div><div id="leftCount" class="num leftNum">0</div></div>
+      <div class="card"><div class="label">Ipsi 右</div><div id="rightCount" class="num rightNum">0</div></div>
       <div class="card"><div class="label">總</div><div id="totalCount" class="num totalNum">0</div></div>
     </div>
     <div class="mainBtns">
-      <button id="leftBtn" class="big" type="button">← 左</button>
-      <button id="rightBtn" class="big" type="button">右 →</button>
+      <button id="leftBtn" class="big" type="button">← Contra<br><span style="font-size:22px">左側 retrieval</span></button>
+      <button id="rightBtn" class="big" type="button">Ipsi →<br><span style="font-size:22px">右側 retrieval</span></button>
     </div>
     <div class="tools">
       <button id="undoBtn" type="button">復原</button>
@@ -64,8 +64,8 @@
       <button id="exportBtn" type="button">匯出 CSV</button>
       <button id="resetBtn" type="button">全部重設</button>
     </div>
-    <div class="summary" id="summary">Preference Index = (右 - 左) / 總數</div>
-    <table><thead><tr><th>時間</th><th>小鼠</th><th>左</th><th>右</th><th>總</th><th>PI</th></tr></thead><tbody id="tbody"></tbody></table>
+    <div class="summary" id="summary">Contralateral % = Contra / (Ipsi + Contra) × 100</div>
+    <table><thead><tr><th>時間</th><th>小鼠</th><th>Contra</th><th>Ipsi</th><th>總</th><th>Contra %</th></tr></thead><tbody id="tbody"></tbody></table>
     <div class="hint">iPhone 使用方式：請用 Safari 開啟，不要只在 ChatGPT 預覽頁操作。可按分享 → 加入主畫面，之後像 App 一樣打開。</div>
   </div>
 </div>
@@ -79,13 +79,13 @@
   try { rows = JSON.parse(localStorage.getItem('corridorRows') || '[]'); } catch(e) { rows=[]; }
   function limit(){ const n=parseInt(els.limit.value,10); return Number.isFinite(n)&&n>0?n:20; }
   function total(){ return left+right; }
-  function pi(){ return total()?((right-left)/total()).toFixed(3):''; }
+  function contraPct(){ return total()?((left/total())*100).toFixed(1):''; }
   function vibrate(){ if(navigator.vibrate) navigator.vibrate(20); }
   function draw(){
     const lim=limit(), t=total();
     els.leftCount.textContent=left; els.rightCount.textContent=right; els.totalCount.textContent=t;
     els.status.textContent = stopped ? `✅ 已達上限 ${lim} 次，已停止` : `進行中：${t} / ${lim}`;
-    els.summary.textContent = `Preference Index = ${pi() || '尚無'} ｜ 左 ${(t?left/t*100:0).toFixed(1)}% ｜ 右 ${(t?right/t*100:0).toFixed(1)}%`;
+    els.summary.textContent = `右側病灶：Contra = 左側 retrieval；Ipsi = 右側 retrieval｜Contralateral % = ${contraPct() || '尚無'}%`;
     els.leftBtn.disabled=stopped; els.rightBtn.disabled=stopped;
     renderRows();
   }
@@ -103,7 +103,7 @@
     stopped=false; vibrate(); draw();
   }
   function save(){
-    rows.push({time:new Date().toLocaleString('zh-TW'), mouse:els.mouseId.value.trim(), trial:els.trial.value.trim(), left, right, total:total(), pi:pi()});
+    rows.push({time:new Date().toLocaleString('zh-TW'), mouse:els.mouseId.value.trim(), trial:els.trial.value.trim(), contra:left, ipsi:right, total:total(), contra_pct:contraPct()});
     localStorage.setItem('corridorRows', JSON.stringify(rows));
     left=0; right=0; history=[]; stopped=false; draw();
   }
@@ -112,13 +112,13 @@
     left=0; right=0; history=[]; stopped=false; rows=[]; localStorage.removeItem('corridorRows'); draw();
   }
   function renderRows(){
-    els.tbody.innerHTML = rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.mouse)}</td><td>${r.left}</td><td>${r.right}</td><td>${r.total}</td><td>${r.pi}</td></tr>`).join('');
+    els.tbody.innerHTML = rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.mouse)}</td><td>${r.contra ?? r.left ?? 0}</td><td>${r.ipsi ?? r.right ?? 0}</td><td>${r.total}</td><td>${r.contra_pct ?? r.pi ?? ''}</td></tr>`).join('');
   }
   function esc(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
   function exportCSV(){
     if(!rows.length){ alert('目前沒有已儲存資料。'); return; }
-    const header=['time','mouse_id','trial','left','right','total','preference_index'];
-    const lines=[header.join(',')].concat(rows.map(r=>[r.time,r.mouse,r.trial,r.left,r.right,r.total,r.pi].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')));
+    const header=['time','mouse_id','trial','contralateral_left','ipsilateral_right','total','contralateral_percent'];
+    const lines=[header.join(',')].concat(rows.map(r=>[r.time,r.mouse,r.trial,(r.contra ?? r.left ?? 0),(r.ipsi ?? r.right ?? 0),r.total,(r.contra_pct ?? r.pi ?? '')].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')));
     const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
     const url=URL.createObjectURL(blob); const a=document.createElement('a');
     a.href=url; a.download='corridor_counter_results.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
